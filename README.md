@@ -1,81 +1,102 @@
 # Launch Brief
 
-Launch Brief is a Vercel-native starter app for early-stage teams shipping an AI-native product.
+Launch Brief is a small “founder launch kit” app built to demonstrate how I’d help an early-stage startup ship quickly on Vercel.
 
-- **Built with** Next.js (App Router) + TypeScript + Tailwind
-- **Auth** via Clerk
-- **Persistence** via Neon Postgres (provisioned through Vercel Storage)
-- **AI workflow** implemented as a structured mock (easy to swap to Vercel AI SDK later)
+- **Framework**: Next.js (App Router) + TypeScript + Tailwind
+- **Auth**: Clerk
+- **DB**: Neon Postgres (via Vercel Storage)
+- **AI workflow**: Vercel AI SDK (OpenAI provider) with a mock fallback for local development
 
-## Why I built this
+## Live demo
 
-This repo is a mini “founder launch kit” app — the kind of lightweight SaaS a pre-seed/seed team could spin up in a weekend. It’s intentionally scoped to show how I’d guide a startup from idea → deploy → production-ish MVP using a Vercel-friendly stack.
+- Production: **[https://vercel-startup-launchpad-jet.vercel.app/](https://vercel-startup-launchpad-jet.vercel.app/)**
+
+## 2-minute walkthrough (what to click)
+
+1) Visit `/` and click **Sign in**
+
+2) Go to `/dashboard` and click **Create brief**
+
+3) Add a title + rough notes (product, audience, positioning)
+
+4) Open the brief detail page and click **Generate assets**
+
+5) You’ll see structured output saved to Postgres:
+
+- Homepage headline + subheadline
+- Feature bullets
+- Onboarding checklist
+- First launch email
+
+## Why I built this (interviewer context)
+
+For a Vercel SE (Startups), I’m not trying to show “a cool demo app.” I’m trying to show how I’d partner with a startup to get from **idea → deployed MVP → iteration loop** with minimal operational overhead.
 
 ## Why this is a good Vercel SE (Startups) demo
 
 Startups aren’t buying “hosting.” They’re buying **the fastest path from idea → live product → iteration**.
 
-This project is designed to be a small, realistic MVP that demonstrates that motion end-to-end.
-
-### What a Vercel SE is really selling (to startups)
+This project is designed to demonstrate those outcomes:
 
 1) **Speed to first deploy**
    - Git push → live URL
    - Minimal setup to get something real into production
 
 2) **Developer velocity**
-   - Preview deployments as the default workflow for iteration
-   - Tight frontend + backend integration (Next.js)
+   - Preview deployments as the default iteration loop
+   - Tight frontend + backend integration with Next.js
 
 3) **Low operational burden**
-   - Managed auth and managed Postgres
+   - Managed auth + managed Postgres
    - Serverless-by-default deployment model
 
 4) **Ability to evolve without replatforming**
-   - A structure that looks like a real SaaS, not a toy demo
-   - Clear seams to swap the mock AI workflow for a provider-backed workflow later
+   - Real SaaS shape: auth, persistence, request boundaries
+   - Clear seam to swap the AI mock → provider-backed workflow
 
-### How this demo maps to those outcomes
+## What to review (code tour)
 
-- **Speed to first deploy**
-  - You can deploy a working app with auth + persistence quickly, without standing up bespoke infrastructure.
+- **Auth + request boundary**
+  - `src/proxy.ts` (Clerk request middleware)
+  - `src/app/dashboard/layout.tsx` (server-side protection + redirect)
 
-- **Developer velocity**
-  - The app is organized around Next.js App Router conventions (server actions, route segments), which supports fast iteration.
+- **Briefs persistence (multi-tenant by user)**
+  - `src/lib/schema.sql` (table definition)
+  - `src/lib/db.ts` (Neon connection)
+  - `src/lib/actions.ts` (server actions: list/create/get/update)
 
-- **Low operational burden**
-  - No custom backend service layer to run.
-  - Auth (Clerk) + DB (Neon) are configured via environment variables and managed dashboards.
+- **AI workflow seam**
+  - `src/lib/mock-ai.ts` (mock generator)
+  - `generateAndUpdateBrief()` in `src/lib/actions.ts` (where a real model call would slot in)
 
-- **AI-native product support**
-  - The workflow is implemented in a way that is easy to swap to the Vercel AI SDK later (keep the UI + persistence, replace the generator).
+- **UX surfaces**
+  - `src/app/dashboard/page.tsx` (brief list)
+  - `src/app/dashboard/briefs/new/page.tsx` (create brief)
+  - `src/app/dashboard/briefs/[id]/page.tsx` (generate + render outputs)
 
-### How I’d explain this in an interview
+## Architecture (high level)
 
-What I wanted to demonstrate with this project wasn’t just the application itself, but how I’d work with an early-stage team adopting Vercel.
+- **UI**: Next.js server components + server actions
+- **Auth**: Clerk (session → `userId`)
+- **DB**: Neon Postgres, with per-user row scoping via `user_id`
+- **AI**: mock generator writes JSON to `generated_json`
 
-I built a small SaaS-style app that mirrors a realistic startup MVP (auth, persistence, and an AI workflow) so I can talk through:
-
-- How to get to a first deploy quickly
-- How to set up an iteration loop (previews, environments)
-- How to keep ops overhead low so the team stays focused on product
-- How to evolve the architecture as the company grows
-
-## What it does
-
-1. Sign in
-2. Create a product brief (title + rough notes)
-3. Generate launch-ready assets:
-   - Homepage headline + subheadline
-   - 3 feature bullets
-   - Onboarding checklist
-   - First launch email draft
-4. Save and revisit briefs in an authenticated dashboard
-
-## Architecture & enablement docs
+More detail:
 
 - `docs/architecture.md`
 - `docs/startup-onboarding-playbook.md`
+
+## Why this stack for startups
+
+- **Fast to ship**: minimal infra, Vercel deploy workflow, previews by default
+- **Low ops**: managed auth + managed Postgres, no bespoke backend service to maintain
+- **Easy to evolve**: replace the mock generator with Vercel AI SDK + model provider without rewriting the product surface
+
+## Tradeoffs (intentional)
+
+- **AI can run provider-backed or mocked**: if `OPENAI_API_KEY` is set, generation uses the Vercel AI SDK; otherwise it falls back to a structured mock.
+- **Schema is minimal** (single table) to keep the MVP crisp; expand after usage patterns are real.
+- **Migration endpoint** is intentionally simple for a demo; production would use a real migration workflow.
 
 ## Local development
 
@@ -102,6 +123,12 @@ Provision a Neon database via **Vercel Storage → Neon** and add:
 
 ```bash
 DATABASE_URL=postgresql://...
+```
+
+#### Vercel AI SDK (OpenAI)
+
+```bash
+OPENAI_API_KEY=sk_...
 ```
 
 ### 3) Run the dev server

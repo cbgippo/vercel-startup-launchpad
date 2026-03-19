@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { sql } from "./db";
 import { generateMockLaunchAssets } from "./mock-ai";
+import { generateLaunchAssetsWithAI } from "./ai";
 
 export type Brief = {
   id: string;
@@ -75,6 +76,8 @@ export async function generateAndUpdateBrief(id: string): Promise<Brief> {
   const brief = await getBriefById(id);
   if (!brief) throw new Error("Brief not found");
 
-  const generated = generateMockLaunchAssets(brief.notes);
+  const generated = process.env.OPENAI_API_KEY
+    ? await generateLaunchAssetsWithAI(brief.notes)
+    : generateMockLaunchAssets(brief.notes);
   return updateBriefGeneratedJson(id, generated);
 }
