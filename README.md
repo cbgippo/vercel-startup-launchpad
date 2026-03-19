@@ -75,23 +75,3 @@ curl -X POST http://localhost:3000/api/migrate
 ```
 
 If you prefer, you can also run the SQL in `src/lib/schema.sql` directly in the Neon SQL editor.
-
-## Example brief you can paste
-
-**Title**
-
-Launch Brief for “SignalPath”
-
-**Rough notes**
-
-SignalPath is an AI-native customer research copilot for early-stage teams. Founders and PMs paste raw interview notes and support tickets, and SignalPath turns them into themes, pain points, and launch messaging. Target users are pre-seed/seed founders and small product teams without dedicated research ops. Differentiator: tight workflow from raw text → prioritized insights → copy you can ship (homepage hero, feature bullets, onboarding checklist, and first launch email). We want to feel fast, opinionated, and lightweight — not an enterprise BI tool.
-
-## Deployment notes
-
-- Add the same env vars to your Vercel Project settings (Clerk + `DATABASE_URL`).
-- Use Preview Deployments on PRs to iterate on onboarding flows and UX.
-
-## Tradeoffs (intentional)
-
-- AI is mocked to keep the demo provider-agnostic; swapping to Vercel AI SDK should be a small change.
-- Schema is minimal on purpose; optimize after usage patterns are real.
