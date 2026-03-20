@@ -9,9 +9,7 @@ Launch Brief is a small “founder launch kit” app built to demonstrate how I�
 
 ## Live demo
 
-- Production: **[https://vercel-startup-launchpad-jet.vercel.app/](https://vercel-startup-launchpad-jet.vercel.app/)**
-
-## 2-minute walkthrough (what to click)
+Production: **[https://vercel-startup-launchpad-jet.vercel.app/](https://vercel-startup-launchpad-jet.vercel.app/)**
 
 1) Visit `/` and click **Sign in**
 
@@ -28,11 +26,9 @@ Launch Brief is a small “founder launch kit” app built to demonstrate how I�
 - Onboarding checklist
 - First launch email
 
-## Why I built this (interviewer context)
+## Why I built this
 
-For a Vercel SE (Startups), I’m not trying to show “a cool demo app.” I’m trying to show how I’d partner with a startup to get from **idea → deployed MVP → iteration loop** with minimal operational overhead.
-
-## Why this is a good Vercel SE (Startups) demo
+This is how I’d partner with a startup to get from **idea → deployed MVP → iteration loop** with minimal operational overhead.
 
 Startups aren’t buying “hosting.” They’re buying **the fastest path from idea → live product → iteration**.
 
@@ -54,7 +50,7 @@ This project is designed to demonstrate those outcomes:
    - Real SaaS shape: auth, persistence, request boundaries
    - Clear seam to swap the AI mock → provider-backed workflow
 
-## What to review (code tour)
+## Code tour
 
 - **Auth + request boundary**
   - `src/proxy.ts` (Clerk request middleware)
@@ -99,7 +95,7 @@ More detail:
 ## Tradeoffs (intentional)
 
 - **AI can run provider-backed or mocked**: if `OPENAI_API_KEY` is set, generation uses the Vercel AI SDK; otherwise it falls back to a structured mock.
-- **Schema is minimal** (single table) to keep the MVP crisp; expand after usage patterns are real.
+- **Schema is minimal** to keep the MVP crisp; expand after usage patterns are real.
 - **Migration endpoint** is intentionally simple for a demo; production would use a real migration workflow.
 
 ## Local development
