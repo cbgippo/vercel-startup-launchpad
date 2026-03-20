@@ -13,12 +13,46 @@ type Brief = {
 
 export default async function DashboardPage() {
   const briefs = await getBriefsForUser();
+  const teamSlug = process.env.NEXT_PUBLIC_VERCEL_TEAM_SLUG;
+  const projectSlug = process.env.NEXT_PUBLIC_VERCEL_PROJECT_SLUG;
+  const vercelProjectBaseUrl =
+    teamSlug && projectSlug ? `https://vercel.com/${teamSlug}/${projectSlug}` : null;
+  const analyticsUrl = vercelProjectBaseUrl ? `${vercelProjectBaseUrl}/analytics` : null;
+  const speedInsightsUrl = vercelProjectBaseUrl
+    ? `${vercelProjectBaseUrl}/speed-insights`
+    : null;
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
         <div className="flex items-center gap-3">
+          {analyticsUrl ? (
+            <Link
+              href={analyticsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
+            >
+              Analytics
+            </Link>
+          ) : null}
+          {speedInsightsUrl ? (
+            <Link
+              href={speedInsightsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
+            >
+              Speed Insights
+            </Link>
+          ) : null}
+          <Link
+            href="/dashboard/onboarding"
+            className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
+          >
+            Onboarding
+          </Link>
           <Link
             href="/dashboard/briefs/new"
             className="inline-flex h-9 items-center justify-center rounded-md bg-zinc-900 px-3 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"

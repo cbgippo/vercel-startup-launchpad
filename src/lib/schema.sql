@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS briefs (
 
 -- Optional: index for per-user queries
 CREATE INDEX IF NOT EXISTS idx_briefs_user_id ON briefs(user_id);
+
+CREATE TABLE IF NOT EXISTS onboarding_state (
+  user_id TEXT PRIMARY KEY,
+  completed_step_3 BOOLEAN NOT NULL DEFAULT FALSE,
+  completed_at TIMESTAMPTZ
+);

@@ -85,6 +85,10 @@ More detail:
 
 - `docs/architecture.md`
 - `docs/startup-onboarding-playbook.md`
+- `docs/v0.md`
+- `docs/startup-program-kit/workshop.md`
+- `docs/startup-program-kit/pitch.md`
+- `docs/startup-program-kit/deployment-checklist.md`
 
 ## Why this stack for startups
 
@@ -145,7 +149,7 @@ Open:
 
 ## Database setup (one-time)
 
-Create the `briefs` table by running the included migration endpoint:
+Create the `briefs` and `onboarding_state` tables by running the included migration endpoint:
 
 ```bash
 curl -X POST http://localhost:3000/api/migrate
